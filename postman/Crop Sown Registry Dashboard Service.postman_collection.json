@@ -1,0 +1,1305 @@
+{
+  "info": {
+    "_postman_id": "55ea9e5e-27bd-59aa-91a1-12002a8e8a34",
+    "name": "Crop Sown Registry Dashboard Service",
+    "description": "Read-only aggregate API of the crop sown registry, used by the OAN dashboards.\n\n- Every chart: `GET {{baseUrl}}/api/v1/charts/<chartId>` returns a JSON array of rows.\n- Filters (all optional, combined with AND) are included on each request but disabled; enable the ones you need. `all` or omitted means no filter.\n  - `region`, `zone`, `woreda`, `kebele`: P-codes, in any of the forms `ET04`, `region-ET04`, `REGION_ET04`.\n  - `recordState`: record status, case-insensitive. Without it, only ACTIVE records are counted (except `cropByRecordState`).\n  - `status`: approval-workflow status (`APPROVAL_STATUS_APPROVED` or `APPROVED`).\n  - `season`: production season (`CROP_SEASON_MEHER` or `MEHER`).\n  - `cropYear`: crop year, e.g. `2026`.\n  - `commodity`: crop lookup key (`CROP_COMMODITY_WHEAT`), its last part (`WHEAT`) or the label.\n- Areas are hectares.\n- The collection-level test checks status 200 and the exact response keys per chart. Example responses come from the service test fixture.\n\nSet `baseUrl` (collection variable, or the environment) to the service URL. The service has no authentication and is meant to be reachable on the private network only.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        },
+        "description": "Liveness and database connectivity (runs SELECT 1)."
+      },
+      "response": [
+        {
+          "name": "Healthy",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "{\"status\": \"ok\"}"
+        }
+      ]
+    },
+    {
+      "name": "cropKpis",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropKpis",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropKpis"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Headline totals: area sown, owned area, farmers, registrations, crop types, woredas reporting, average plot. One row.\n\nReturns a JSON array of rows with keys: `avg_plot_size`, `crop_types`, `farmers`, `owned_area`, `registrations`, `total_area`, `woredas_reporting`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropKpis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropKpis"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"total_area\": 7.0, \"owned_area\": 3.5, \"farmers\": 3, \"registrations\": 4, \"crop_types\": 4, \"woredas_reporting\": 3, \"avg_plot_size\": 1.75}]"
+        }
+      ]
+    },
+    {
+      "name": "cropAreaByCrop",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropAreaByCrop",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropAreaByCrop"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Hectares and farmers per crop, largest first.\n\nReturns a JSON array of rows with keys: `area`, `crop`, `crop_code`, `farmers`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropAreaByCrop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropAreaByCrop"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"crop\": \"Wheat\", \"crop_code\": \"CROP_COMMODITY_WHEAT\", \"area\": 5.0, \"farmers\": 2}, {\"crop\": \"Maize\", \"crop_code\": \"CROP_COMMODITY_MAIZE\", \"area\": 1.5, \"farmers\": 1}, {\"crop\": \"Teff\", \"crop_code\": \"CROP_COMMODITY_TEFF\", \"area\": 0.5, \"farmers\": 1}, {\"crop\": \"Sorghum\", \"crop_code\": \"CROP_COMMODITY_SORGHUM\", \"area\": 0.0, \"farmers\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropAreaByRegion",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropAreaByRegion",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropAreaByRegion"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Hectares (under `farmers`, which the map reads) and farmer count per region.\n\nReturns a JSON array of rows with keys: `farmer_count`, `farmers`, `region`, `region_code`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropAreaByRegion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropAreaByRegion"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"region\": \"Oromia\", \"region_code\": \"ET04\", \"farmers\": 4.0, \"farmer_count\": 1}, {\"region\": \"Afar\", \"region_code\": \"ET02\", \"farmers\": 3.0, \"farmer_count\": 1}, {\"region\": \"Unknown\", \"region_code\": \"Unknown\", \"farmers\": 0.0, \"farmer_count\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropAreaByZone",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropAreaByZone",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropAreaByZone"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Hectares and farmer count per zone.\n\nReturns a JSON array of rows with keys: `farmer_count`, `farmers`, `zone`, `zone_code`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropAreaByZone",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropAreaByZone"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"zone\": \"East Shewa\", \"zone_code\": \"ET0407\", \"farmers\": 4.0, \"farmer_count\": 1}, {\"zone\": \"Kilbet Rasu\", \"zone_code\": \"ET0202\", \"farmers\": 3.0, \"farmer_count\": 1}, {\"zone\": \"Unknown\", \"zone_code\": \"Unknown\", \"farmers\": 0.0, \"farmer_count\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropAreaByWoreda",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropAreaByWoreda",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropAreaByWoreda"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Hectares and farmer count per woreda.\n\nReturns a JSON array of rows with keys: `farmer_count`, `farmers`, `woreda`, `woreda_code`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropAreaByWoreda",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropAreaByWoreda"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"woreda\": \"Afdera\", \"woreda_code\": \"ET020207\", \"farmers\": 3.0, \"farmer_count\": 1}, {\"woreda\": \"Ada'a\", \"woreda_code\": \"ET040706\", \"farmers\": 2.5, \"farmer_count\": 1}, {\"woreda\": \"Adama\", \"woreda_code\": \"ET040703\", \"farmers\": 1.5, \"farmer_count\": 1}, {\"woreda\": \"Unknown\", \"woreda_code\": \"Unknown\", \"farmers\": 0.0, \"farmer_count\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropAreaByKebele",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropAreaByKebele",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropAreaByKebele"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Hectares and farmer count per kebele.\n\nReturns a JSON array of rows with keys: `farmer_count`, `farmers`, `kebele`, `kebele_code`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropAreaByKebele",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropAreaByKebele"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"kebele\": \"Adkuma\", \"kebele_code\": \"ET020207888009\", \"farmers\": 3.0, \"farmer_count\": 1}, {\"kebele\": \"Dire Arerti\", \"kebele_code\": \"ET040706888019\", \"farmers\": 2.5, \"farmer_count\": 1}, {\"kebele\": \"Bofa\", \"kebele_code\": \"ET040703888001\", \"farmers\": 1.5, \"farmer_count\": 1}, {\"kebele\": \"Unknown\", \"kebele_code\": \"Unknown\", \"farmers\": 0.0, \"farmer_count\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropTopWoredas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropTopWoredas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropTopWoredas"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "The eight woredas with the most hectares sown.\n\nReturns a JSON array of rows with keys: `area`, `farmers`, `woreda`, `woreda_code`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropTopWoredas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropTopWoredas"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"woreda\": \"Afdera\", \"woreda_code\": \"ET020207\", \"area\": 3.0, \"farmers\": 1}, {\"woreda\": \"Ada'a\", \"woreda_code\": \"ET040706\", \"area\": 2.5, \"farmers\": 1}, {\"woreda\": \"Adama\", \"woreda_code\": \"ET040703\", \"area\": 1.5, \"farmers\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropLandTenureSplit",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropLandTenureSplit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropLandTenureSplit"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Sowing lines and hectares per plot ownership type.\n\nReturns a JSON array of rows with keys: `area`, `ownership_type`, `ownership_type_code`, `parcels`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropLandTenureSplit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropLandTenureSplit"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"ownership_type\": \"Owner\", \"ownership_type_code\": \"OWNERSHIP_TYPE_OWNER\", \"parcels\": 2, \"area\": 3.5}, {\"ownership_type\": \"Unknown\", \"ownership_type_code\": \"UNKNOWN\", \"parcels\": 2, \"area\": 3.0}, {\"ownership_type\": \"Tenant\", \"ownership_type_code\": \"OWNERSHIP_TYPE_TENANT\", \"parcels\": 1, \"area\": 0.5}]"
+        }
+      ]
+    },
+    {
+      "name": "cropBySeason",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropBySeason",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropBySeason"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Hectares and farmers per sowing season.\n\nReturns a JSON array of rows with keys: `area`, `farmers`, `season`, `season_code`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropBySeason",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropBySeason"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"season\": \"Meher\", \"season_code\": \"CROP_SEASON_MEHER\", \"area\": 5.5, \"farmers\": 3}, {\"season\": \"Belg\", \"season_code\": \"CROP_SEASON_BELG\", \"area\": 1.5, \"farmers\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropTrendByMonth",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropTrendByMonth",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropTrendByMonth"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Farmers, area and owned area per sowing month.\n\nReturns a JSON array of rows with keys: `farmers`, `owned_area`, `period`, `total_area`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropTrendByMonth",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropTrendByMonth"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"period\": \"2026-04\", \"farmers\": 1, \"total_area\": 1.5, \"owned_area\": 1.5}, {\"period\": \"2026-06\", \"farmers\": 2, \"total_area\": 2.5, \"owned_area\": 2.0}, {\"period\": \"2026-07\", \"farmers\": 1, \"total_area\": 3.0, \"owned_area\": 0.0}]"
+        }
+      ]
+    },
+    {
+      "name": "cropByStatus",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropByStatus",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropByStatus"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Registrations per approval-workflow status.\n\nReturns a JSON array of rows with keys: `registrations`, `status`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropByStatus",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropByStatus"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"status\": \"APPROVAL_STATUS_DRAFT\", \"registrations\": 2}, {\"status\": \"APPROVAL_STATUS_APPROVED\", \"registrations\": 1}, {\"status\": \"APPROVAL_STATUS_SUBMITTED\", \"registrations\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropByLifecycleStage",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropByLifecycleStage",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropByLifecycleStage"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Registrations per lifecycle stage.\n\nReturns a JSON array of rows with keys: `lifecycle_stage`, `registrations`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropByLifecycleStage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropByLifecycleStage"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"lifecycle_stage\": \"SOWING_APPROVED\", \"registrations\": 2}, {\"lifecycle_stage\": \"DRAFT\", \"registrations\": 1}, {\"lifecycle_stage\": \"PENDING_PLANNING\", \"registrations\": 1}]"
+        }
+      ]
+    },
+    {
+      "name": "cropByRecordState",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/charts/cropByRecordState",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "charts",
+            "cropByRecordState"
+          ],
+          "query": [
+            {
+              "key": "region",
+              "value": "ET04",
+              "disabled": true
+            },
+            {
+              "key": "zone",
+              "value": "ET0407",
+              "disabled": true
+            },
+            {
+              "key": "woreda",
+              "value": "ET040706",
+              "disabled": true
+            },
+            {
+              "key": "kebele",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "recordState",
+              "value": "ACTIVE",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "APPROVED",
+              "disabled": true
+            },
+            {
+              "key": "season",
+              "value": "MEHER",
+              "disabled": true
+            },
+            {
+              "key": "cropYear",
+              "value": "2026",
+              "disabled": true
+            },
+            {
+              "key": "commodity",
+              "value": "WHEAT",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Registrations per record status (sees every status).\n\nReturns a JSON array of rows with keys: `record_state`, `registrations`."
+      },
+      "response": [
+        {
+          "name": "Example (test fixture data)",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charts/cropByRecordState",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "charts",
+                "cropByRecordState"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": null,
+          "cookie": [],
+          "body": "[{\"record_state\": \"ACTIVE\", \"registrations\": 4}, {\"record_state\": \"INACTIVE\", \"registrations\": 1}]"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Contract checks for every request. Keys per chart mirror CONTRACT in the service's tests/test_charts.py.",
+          "const CONTRACT = {\"cropKpis\": [\"avg_plot_size\", \"crop_types\", \"farmers\", \"owned_area\", \"registrations\", \"total_area\", \"woredas_reporting\"], \"cropAreaByCrop\": [\"area\", \"crop\", \"crop_code\", \"farmers\"], \"cropAreaByRegion\": [\"farmer_count\", \"farmers\", \"region\", \"region_code\"], \"cropAreaByZone\": [\"farmer_count\", \"farmers\", \"zone\", \"zone_code\"], \"cropAreaByWoreda\": [\"farmer_count\", \"farmers\", \"woreda\", \"woreda_code\"], \"cropAreaByKebele\": [\"farmer_count\", \"farmers\", \"kebele\", \"kebele_code\"], \"cropTopWoredas\": [\"area\", \"farmers\", \"woreda\", \"woreda_code\"], \"cropLandTenureSplit\": [\"area\", \"ownership_type\", \"ownership_type_code\", \"parcels\"], \"cropBySeason\": [\"area\", \"farmers\", \"season\", \"season_code\"], \"cropTrendByMonth\": [\"farmers\", \"owned_area\", \"period\", \"total_area\"], \"cropByStatus\": [\"registrations\", \"status\"], \"cropByLifecycleStage\": [\"lifecycle_stage\", \"registrations\"], \"cropByRecordState\": [\"record_state\", \"registrations\"]};",
+          "pm.test('status is 200', () => pm.response.to.have.status(200));",
+          "const path = pm.request.url.getPath();",
+          "if (path === '/health') {",
+          "  pm.test('health reports ok', () => pm.expect(pm.response.json().status).to.eql('ok'));",
+          "} else {",
+          "  const chart = path.split('/').pop();",
+          "  const rows = pm.response.json();",
+          "  pm.test('body is an array', () => pm.expect(rows).to.be.an('array'));",
+          "  const keys = CONTRACT[chart];",
+          "  if (keys) {",
+          "    pm.test('rows have exactly the contract keys', () => rows.forEach(r => pm.expect(Object.keys(r).sort()).to.eql(keys)));",
+          "  }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8007",
+      "description": "Base URL of the dashboard service."
+    }
+  ]
+}
