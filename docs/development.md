@@ -102,9 +102,7 @@ because FastAPI's `Depends()` defaults trigger it.
 
    ```python
    @router.get("/cropAreaByPestStatus", response_model=Rows)
-   async def get_area_by_pest_status(
-       filters: ChartFilters = Depends(), pool: asyncpg.Pool = Depends(get_db_pool)
-   ):
+   async def get_area_by_pest_status(filters: ChartFilters = Depends(), pool: asyncpg.Pool = Depends(get_db_pool)):
        where = build_where_clause(filters)
        query = f"""
            SELECT COALESCE(has_pest_disease, false) AS has_pest_disease,
