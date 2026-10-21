@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "55ea9e5e-27bd-59aa-91a1-12002a8e8a34",
     "name": "Crop Sown Registry Dashboard Service",
-    "description": "Read-only aggregate API of the crop sown registry, used by the OAN dashboards.\n\n- Every chart: `GET {{baseUrl}}/api/v1/charts/<chartId>` returns a JSON array of rows.\n- Filters (all optional, combined with AND) are included on each request but disabled; enable the ones you need. `all` or omitted means no filter.\n  - `region`, `zone`, `woreda`, `kebele`: P-codes, in any of the forms `ET04`, `region-ET04`, `REGION_ET04`.\n  - `recordState`: record status, case-insensitive. Without it, only ACTIVE records are counted (except `cropByRecordState`).\n  - `status`: approval-workflow status (`APPROVAL_STATUS_APPROVED` or `APPROVED`).\n  - `season`: production season (`CROP_SEASON_MEHER` or `MEHER`).\n  - `cropYear`: crop year, e.g. `2026`.\n  - `commodity`: crop lookup key (`CROP_COMMODITY_WHEAT`), its last part (`WHEAT`) or the label.\n- Areas are hectares.\n- The collection-level test checks status 200 and the exact response keys per chart. Example responses come from the service test fixture.\n\nSet `baseUrl` (collection variable, or the environment) to the service URL. The service has no authentication and is meant to be reachable on the private network only.",
+    "description": "Read-only aggregate API of the crop sown registry, used by the OAN dashboards.\n\n- Every chart: `GET {{baseUrl}}/api/v1/charts/<chartId>` returns a JSON array of rows.\n- Filters (all optional, combined with AND) are included on each request but disabled; enable the ones you need. `all` or omitted means no filter.\n  - `region`, `zone`, `woreda`, `kebele`: P-codes, in any of the forms `ET04`, `region-ET04`, `REGION_ET04`.\n  - `recordState`: record status, case-insensitive. Without it, only ACTIVE records are counted (except `cropByRecordState`).\n  - `status`: approval-workflow status (`APPROVAL_STATUS_APPROVED` or `APPROVED`).\n  - `season`: production season (`CROP_SEASON_MEHER` or `MEHER`).\n  - `cropYear`: crop year, e.g. `2026`.\n  - `commodity`: crop lookup key (`CROP_COMMODITY_WHEAT`), its last part (`WHEAT`) or the label.\n- Areas are hectares.\n- The collection-level test checks status 200 and the exact response keys per chart. Example responses come from the service test fixture.\n\nSet `baseUrl` (collection variable, or the environment) to the service URL. Authentication is required by default; the service is intended for private-network callers.\n\nAuthentication is required by default. Set accessToken to a service-account token with this API audience and charts:read role. Keep token values in a local/secret environment, never in this file. /health stays public. AUTH_ENABLED=false is isolated local development only.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -20,7 +20,10 @@
             "health"
           ]
         },
-        "description": "Liveness and database connectivity (runs SELECT 1)."
+        "description": "Liveness and database connectivity (runs SELECT 1).",
+        "auth": {
+          "type": "noauth"
+        }
       },
       "response": [
         {
@@ -1300,6 +1303,21 @@
       "key": "baseUrl",
       "value": "http://localhost:8007",
       "description": "Base URL of the dashboard service."
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
     }
-  ]
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  }
 }
