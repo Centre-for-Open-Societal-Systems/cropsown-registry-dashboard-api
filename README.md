@@ -79,3 +79,9 @@ the full contract.
 ## License
 
 See [LICENSE](LICENSE).
+
+## Continuous validation
+
+See [ci/README.md](ci/README.md) for isolated PostgreSQL contract/auth tests,
+GitHub checks and the validation-only Jenkins entry. Image publication and
+deployment remain owned by the Crop Sown registry.
