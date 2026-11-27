@@ -1,3 +1,5 @@
+def call() {
+
 pipeline {
     agent { label 'vpn-agent2' }
     options {
@@ -16,3 +18,6 @@ pipeline {
         }
     }
 }
+
+}
+return this
